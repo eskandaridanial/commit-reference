@@ -128,7 +128,7 @@ def git_commit():
             print("\n\t----------------------------------------------------")
             # Prompt user for input and validate against valid tags
             while True:
-                commit_tag_num = input("\tEnter commit tag: ")
+                commit_tag_num = input("\tEnter Commit Tag: ")
                 if commit_tag_num in valid_tags:
                     commit_tag = valid_tags[commit_tag_num]["tag"]
                     break
@@ -201,6 +201,57 @@ def git_push():
     print("\n----------------------------------------------------")
     # Print the output to the console
     print(f"{output.decode()}")
+
+def git_branch():
+    repo = git.Repo('.')
+
+    # Get the current Git branch
+    branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
+
+    # Print the branch name
+    print("\tCurrent Branch\t\t\t\t", colored(branch, 'white'))
+
+    print("\n\tNote: Use Descriptive, Consistent, Short Name.")
+    print("\n\tNote: Use Only Alphanumeric Characters && Dashes (-)")
+
+    header_message = ""
+    # Define valid tags and their explanations
+    valid_tags = {
+        "1": {"tag": "feature", "explanation": "a new feature"},
+        "2": {"tag": "fix", "explanation": "bug fix"},
+        "3": {"tag": "refactor", "explanation": "code restructuring"},
+        "4": {"tag": "test", "explanation": "test-related changes"},
+        "5": {"tag": "doc", "explanation": "documentation updates"},
+        "6": {"tag": "style", "explanation": "code formatting"},
+        "7": {"tag": "perf", "explanation": "improve performance"},
+        "8": {"tag": "config", "explanation": "change the configuration file"},
+        "9": {"tag": "security", "explanation": "improve securiy"},
+        "10": {"tag": "revert", "explanation": "undo or revert previous changes"},
+        "11": {"tag": "service", "explanation": "a new service"}
+    }
+
+    print(f"\n\tValid Tags")
+    for key, value in valid_tags.items():
+        print(colored(f"\t\t\t\t\t\t {key}. {value['tag']}: {value['explanation']}", "green"))
+
+    print("\n\t----------------------------------------------------")
+    # Prompt user for input and validate against valid tags
+    while True:
+        branch_tag_num = input("\tEnter Branch Tag: ")
+        if branch_tag_num in valid_tags:
+            branch_tag = valid_tags[branch_tag_num]["tag"]
+            break
+        else:
+            print("\tInvalid Tag. Please Try Again.")
+
+    # get the new branch name from user input
+    branch_name = input("\tEnter The Name For The New Branch: ")
+    branch_name = f"krz/{branch_tag}/{branch_name}" 
+    repo.git.checkout('-b', branch_name)
+
+    print(f"\n\tBranch Created\t\t\t\t", colored(f"{branch_name}", 'green'))
+    print(f"\n\tCheckout To\t\t\t\t", colored(f"{branch_name}", 'green'))
+
     
 def generate_logo(action):
     logo = text2art(action.upper(), font='rd')
@@ -235,6 +286,9 @@ elif action == "commit":
 elif action == "push":
     generate_logo(action)
     git_push()
+elif action == "branch":
+    generate_logo(action)
+    git_branch()
 else:
     print("\tAction Not Supported.")
     exit()
