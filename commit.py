@@ -1,6 +1,3 @@
-# become a better committer
-# author doneskandari@gmail.com
-
 # become a better commiter
 # author doneskandari@gmail.com
 
@@ -78,3 +75,29 @@ def git_add():
 
     except Exception as e:
         print("An error occurred:", e)
+
+def git_commit():
+    try:
+        
+        # Prompt user for commit tag
+        commit_tag = input("Enter commit tag: ")
+
+        # Prompt user for commit message header
+        commit_message = input("Enter commit message: ")
+
+        # Prompt user for commit message body
+        commit_body = input("Enter commit body: ")
+
+        # Prompt user for commit metadata
+        commit_metadata = input("Enter commit metadata: ")
+
+        # Create commit message string in proper format
+        commit_message_str = f"fix: {commit_message}"
+
+        # Commit changes with tag and message
+        subprocess.run(["git", "commit", "-m", f"{commit_message_str}", "-m", f"{commit_body}", "-m", f"{commit_metadata}"])
+
+    except Exception as e:
+        print("An error occurred:", e)
+
+# Get the action to take from the command line argument
