@@ -101,3 +101,19 @@ def git_commit():
         print("An error occurred:", e)
 
 # Get the action to take from the command line argument
+if len(sys.argv) > 1:
+    action = sys.argv[1]
+else:
+    print("Please specify an action (e.g. 'add', 'commit', 'push').")
+    exit()
+
+if action == "add":
+    git_add()
+elif action == "commit":
+    git_commit()
+elif action == "push":
+    os.system(f"git {action}")
+    # Run the `git log` command with the `-n 1` option to get the latest commit
+    output = subprocess.check_output(['git', 'log', '-n', '1'])
+    # Print the output to the console
+    print(output.decode())
