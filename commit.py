@@ -27,14 +27,14 @@ def git_add():
         branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
 
         # Print the branch name
-        print(f"\tCurrent branch is", colored(branch, 'red'))
+        print("\tCurrent Branch:", colored(branch, 'white'))
         
         if len(changed_files) == 0:
-            print(f"\n\tNo file has been changed in the current directory.")
+            print("\n\tNo Change.")
             exit()
 
         # Print the list of changed files with colors
-        print(f"\n\tThe following files has been changed in the current directory:")
+        print(f"\n\tChanges (untracked_files && not_staged_files):")
         for i, file in enumerate(changed_files):
             colored_num = colored(i+1, "green")
             colored_filename = colored(file, "green")
@@ -69,6 +69,7 @@ def git_add():
                 for i in selected_files:
                     filename = changed_files[i-1]
                     subprocess.run(["git", "add", f"{filename}"])
+                    print(colored(f"\t{filename} is now in staging area.", "green"))
                 break
             else:
                 print(colored("\nInvalid selection. Please try again.", "red"))
@@ -78,21 +79,18 @@ def git_add():
 
 def git_commit():
     try:
-        
-        # Prompt user for commit tag
-        commit_tag = input("Enter commit tag: ")
 
         # Prompt user for commit message header
         commit_message = input("Enter commit message: ")
 
-        # Prompt user for commit message body
+        # Prompt user for commit smessage body
         commit_body = input("Enter commit body: ")
 
         # Prompt user for commit metadata
         commit_metadata = input("Enter commit metadata: ")
 
         # Create commit message string in proper format
-        commit_message_str = f"fix: {commit_message}"
+        commit_message_str = f"{commit_tag}: {commit_message}"
 
         # Commit changes with tag and message
         subprocess.run(["git", "commit", "-m", f"{commit_message_str}", "-m", f"{commit_body}", "-m", f"{commit_metadata}"])
