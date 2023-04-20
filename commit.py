@@ -1,3 +1,80 @@
 # become a better committer
 # author doneskandari@gmail.com
 
+# become a better commiter
+# author doneskandari@gmail.com
+
+import os
+import sys
+import subprocess
+import git
+from termcolor import colored
+
+def git_add():
+    try:
+
+        repo = git.Repo('.')  # Replace '.' with the path to your repository
+
+        # Get untracked files
+        untracked_files = repo.untracked_files
+
+        # Get not staged files
+        not_staged_files = [diff.a_path for diff in repo.index.diff(None)]
+
+        # Merge untracked and not staged files
+        changed_files = []
+        changed_files.extend(untracked_files)
+        changed_files.extend(not_staged_files)
+
+        # Get the current Git branch
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
+
+        # Print the branch name
+        print(f"\tCurrent branch is", colored(branch, 'red'))
+        
+        if len(changed_files) == 0:
+            print(f"\n\tNo file has been changed in the current directory.")
+            exit()
+
+        # Print the list of changed files with colors
+        print(f"\n\tThe following files has been changed in the current directory:")
+        for i, file in enumerate(changed_files):
+            colored_num = colored(i+1, "green")
+            colored_filename = colored(file, "green")
+            print(f"\t{colored_num}. {colored_filename}")
+
+        # Prompt the user to select files to add to the staging area
+        while True:
+            selection = input("\nEnter the file number(s) to add (e.g. 1,2), or enter 'all' to add all files, or enter 'exit' to exit: ")
+
+            # Handle special commands
+            if selection == "exit":
+                exit()
+            elif selection == "all":
+                selected_files = set(range(1, len(changed_files) + 1))
+                break
+
+            # Parse the user's selection
+            selected_files = set()
+            for sel in selection.split(","):
+                try:
+                    file_number = int(sel)
+                    if file_number < 1 or file_number > len(changed_files):
+                        raise ValueError
+                    selected_files.add(file_number)
+                except ValueError:
+                    selected_files = set()
+                    break
+                    
+
+            # Add the selected files to the staging area
+            if selected_files:
+                for i in selected_files:
+                    filename = changed_files[i-1]
+                    subprocess.run(["git", "add", f"{filename}"])
+                break
+            else:
+                print(colored("\nInvalid selection. Please try again.", "red"))
+
+    except Exception as e:
+        print("An error occurred:", e)
