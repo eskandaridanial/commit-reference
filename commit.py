@@ -195,26 +195,12 @@ def git_push():
     # Print the branch name
     print("\tCurrent Branch\t\t\t\t", colored(branch, 'white'))
 
-    local_branch = branch
-    remote_branch = f'origin/{branch}'
-
-    # fetch the latest changes from remote
-    repo.git.fetch('.')
-
-    # Compare the commit IDs of the local and remote branches
-    local_commit = repo.head.commit
-    remote_commit = repo.commit(f'{remote_branch}')
-
-    if local_commit != remote_commit:
-        print('\tLocal Branch Is Behind Remote Branch. Please Pull The Latest Changes Before Pushing.')
-        exit()
-    else:
-        # os.system(f"git push")
-        # Run the `git log` command with the `-n 1` option to get the latest commit
-        output = subprocess.check_output(['git', 'log', '-n', '1'])
-        print("\n----------------------------------------------------")
-        # Print the output to the console
-        print(f"{output.decode()}")
+    os.system(f"git push")
+    # Run the `git log` command with the `-n 1` option to get the latest commit
+    output = subprocess.check_output(['git', 'log', '-n', '1'])
+    print("\n----------------------------------------------------")
+    # Print the output to the console
+    print(f"{output.decode()}")
     
 def generate_logo(action):
     logo = text2art(action.upper(), font='rd')
