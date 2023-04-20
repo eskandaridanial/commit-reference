@@ -198,18 +198,26 @@ def git_push():
     local_branch = branch
     remote_branch = f'origin/{branch}'
 
-    # Check if the local branch is behind the remote branch
-    behind = list(repo.git.rev_list(f'{local_branch}..{remote_branch}'))
+    # fetch the latest changes from remote
+    repo.git.fetch('.')
 
-    if behind:
+    # Compare the commit IDs of the local and remote branches
+    local_commit = repo.head.commit
+    remote_commit = repo.commit(f'{remote_branch}')
+    base_commit = repo.merge_base(local_commit, remote_commit)
+
+    if base_commit == remote_commit:
         print('Local Branch Is Behind Remote Branch. Please Pull The Latest Changes Before Pushing.')
-    else:
-        os.system(f"git {action}")
+        exit()
+    elif local_commit == remote_commit:
+        # os.system(f"git push")
         # Run the `git log` command with the `-n 1` option to get the latest commit
         output = subprocess.check_output(['git', 'log', '-n', '1'])
         print("\n----------------------------------------------------")
         # Print the output to the console
         print(f"{output.decode()}")
+    else:
+        print('Local Branch Has Diverged From Remote Branch. Please Resolve The Conflicts Before pushing.')
 
 def generate_logo(action):
     logo = text2art(action.upper(), font='rd')
