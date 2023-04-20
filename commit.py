@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # become a better commiter
 # author doneskandari@gmail.com
 
