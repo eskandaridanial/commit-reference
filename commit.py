@@ -27,22 +27,25 @@ def git_add():
         branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
 
         # Print the branch name
-        print("\tCurrent Branch:", colored(branch, 'white'))
+        print("\tCurrent Branch\t\t\t\t", colored(branch, 'white'))
         
         if len(changed_files) == 0:
-            print("\n\tNo Change.")
+            print("\n\tNo Changes.")
             exit()
 
         # Print the list of changed files with colors
-        print(f"\n\tChanges (untracked_files && not_staged_files):")
+        print(f"\n\tChanges (Untracked, Not Staged)")
         for i, file in enumerate(changed_files):
             colored_num = colored(i+1, "green")
             colored_filename = colored(file, "green")
-            print(f"\t{colored_num}. {colored_filename}")
+            print(f"\t\t\t\t\t\t {colored_num}. {colored_filename}")
+
+
+        print("\n\t----------------------------------------------------")
 
         # Prompt the user to select files to add to the staging area
         while True:
-            selection = input("\nEnter the file number(s) to add (e.g. 1,2), or enter 'all' to add all files, or enter 'exit' to exit: ")
+            selection = input("\tEnter Number(s) (e.g. 1,2) Or 'all' Or 'exit': ")
 
             # Handle special commands
             if selection == "exit":
@@ -69,13 +72,14 @@ def git_add():
                 for i in selected_files:
                     filename = changed_files[i-1]
                     subprocess.run(["git", "add", f"{filename}"])
-                    print(colored(f"\t{filename} is now in staging area.", "green"))
+                    print("\n\t----------------------------------------------------")
+                    print("\n\tEntered Stage Area",colored(f"\t\t\t {filename}", "green"))
                 break
             else:
-                print(colored("\nInvalid selection. Please try again.", "red"))
+                print(colored("Invalid Selection. Please Try Again.", "red"))
 
     except Exception as e:
-        print("An error occurred:", e)
+        print("An Error Occurred:", e)
 
 def git_commit():
     try:
@@ -85,15 +89,20 @@ def git_commit():
         # Get a list of files in the staging area
         staged_files = [item.a_path for item in repo.index.diff('HEAD')]
 
+        # Get the current Git branch
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
+
+        # Print the branch name
+        print("\tCurrent Branch\t\t\t\t", colored(branch, 'white'))
+
         if len(staged_files) == 0:
-            print("Nothing added to the staging area.")
+            print("\n\tNo Changes.")
             exit()
         else:
-            print("The following files has been added to the staging area:")
+            print(f"\n\tStaged Changes")
             for i ,file in enumerate(staged_files):
-                print(colored(f"\t{i+1}. {file}", 'green'))
+                print(colored(f"\t\t\t\t\t\t {i+1}. {file}", 'green'))
 
-            print("\n-------------------------------------")
             header_message = ""
             # Define valid tags and their explanations
             valid_tags = {
@@ -109,54 +118,67 @@ def git_commit():
                 "10": {"tag": "revert", "explanation": "undo or revert previous changes"}
             }
 
+            print(f"\n\tValid Tags")
             for key, value in valid_tags.items():
-                print(colored(f"\t{key}. {value['tag']}: {value['explanation']}", "green"))
+                print(colored(f"\t\t\t\t\t\t {key}. {value['tag']}: {value['explanation']}", "green"))
 
+            print("\n\t----------------------------------------------------")
             # Prompt user for input and validate against valid tags
             while True:
-                commit_tag_num = input("Enter commit tag: ")
+                commit_tag_num = input("\tEnter commit tag: ")
                 if commit_tag_num in valid_tags:
                     commit_tag = valid_tags[commit_tag_num]["tag"]
                     break
                 else:
-                    print("Invalid tag number. Please try again.")
+                    print("\tInvalid Tag. Please Try Again.")
             
             header_message += commit_tag
             header_message += ": "
 
             # Prompt user for commit message header
             while True:
-                commit_message = input("Enter commit message: ")
+                commit_message = input("\tEnter Commit Message: ")
                 if commit_message:
                     break
                 else:
-                    print(colored("Commit message cannot be empty. Please try again.", 'red'))
+                    print(colored("\tCommit Message Cannot Be Empty. Please Try Again.", 'red'))
 
             header_message += commit_message
 
             # Prompt user for commit smessage body
-            commit_body = input("Enter commit body: ")
+            commit_body = input("\tEnter Commit Body: ")
 
             # Prompt user for commit metadata
             while True:
-                commit_metadata = input("Enter commit metadata: ")
+                commit_metadata = input("\tEnter Commit Metadata: ")
                 if commit_metadata:
                     break
                 else:
-                    print(colored("Commit metadata cannot be empty. Please try again.", 'red'))
+                    print(colored("\tCommit Metadata Cannot Be Empty. Please Try Again.", 'red'))
 
             print("\n\tyour commit message looks like:\n")
-            print(colored(f"\t{header_message}\n\n\t{commit_body}\n\n\t{commit_metadata}", 'white'))
-            confirm = input("\nConfirm? (Y/N): ")
+            if commit_body != "":
+                print(colored(f"\t{header_message}\n\n\t{commit_body}\n\n\t{commit_metadata}", 'white'))
+            else:
+                print(colored(f"\t{header_message}\n\n\t{commit_metadata}", 'white'))
+
             while True:
+                confirm = input("\n\tConfirm? Y/N: ")
                 if confirm.lower() == "y":
+                    print("\n\t----------------------------------------------------")
                     # Commit changes with tag and message
-                    subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_body}\n\n", "-m", f"{commit_metadata}\n\n"])
-                    print(colored("\tChanges has been committed.", 'green'))
+                    if commit_body != "":
+                        subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_body}\n\n", "-m", f"{commit_metadata}\n\n"])
+                        print(colored("\tChanges Has Been Committed.", 'green'))
+                    else:
+                        subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_metadata}\n\n"])
+                        print(colored("\tChanges Has Been Committed.", 'green'))
                     break
                 elif confirm.lower() == "n":
-                    print(colored("Run the commit action again.", 'red'))
+                    print(colored("\tRun The Commit Action Again.", 'red'))
                     exit()
+                else:
+                    print(colored("\tInvalid Input. Please Try Again.", 'red'))
 
     except Exception as e:
             print("An error occurred:", e)
@@ -165,7 +187,7 @@ def git_commit():
 if len(sys.argv) > 1:
     action = sys.argv[1]
 else:
-    print("Please specify an action (e.g. 'add', 'commit', 'push').")
+    print("\tPlease Specify Action (e.g. 'add', 'commit', 'push').")
     exit()
 
 if action == "add":
@@ -176,5 +198,6 @@ elif action == "push":
     os.system(f"git {action}")
     # Run the `git log` command with the `-n 1` option to get the latest commit
     output = subprocess.check_output(['git', 'log', '-n', '1'])
+    print("\n\t----------------------------------------------------")
     # Print the output to the console
-    print(output.decode())
+    print(f"\t{output.decode()}")
