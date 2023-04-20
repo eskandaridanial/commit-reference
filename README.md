@@ -98,6 +98,9 @@ Fix #696 issue.
 
 `
 pip install GitPython
+`
+
+`
 pip install termcolor
 `
 
@@ -105,6 +108,9 @@ pip install termcolor
 
 `
 sudo cp /path/to/commit.py /usr/local/bin/
+`
+
+`
 sudo ln -s /usr/local/bin/commit.py /usr/local/bin/committer
 `
 
