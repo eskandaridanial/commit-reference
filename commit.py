@@ -186,6 +186,31 @@ def git_commit():
     except Exception as e:
             print("An error occurred:", e)
 
+def git_push():
+    repo = git.Repo('.')
+
+    # Get the current Git branch
+    branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
+
+    # Print the branch name
+    print("\tCurrent Branch\t\t\t\t", colored(branch, 'white'))
+
+    local_branch = branch
+    remote_branch = f'origin/{branch}'
+
+    # Check if the local branch is behind the remote branch
+    behind = list(repo.git.rev_list(f'{local_branch}..{remote_branch}'))
+
+    if behind:
+        print('Local Branch Is Behind Remote Branch. Please Pull The Latest Changes Before Pushing.')
+    else:
+        os.system(f"git {action}")
+        # Run the `git log` command with the `-n 1` option to get the latest commit
+        output = subprocess.check_output(['git', 'log', '-n', '1'])
+        print("\n----------------------------------------------------")
+        # Print the output to the console
+        print(f"{output.decode()}")
+
 def generate_logo(action):
     logo = text2art(action.upper(), font='rd')
 
@@ -218,12 +243,7 @@ elif action == "commit":
     git_commit()
 elif action == "push":
     generate_logo(action)
-    os.system(f"git {action}")
-    # Run the `git log` command with the `-n 1` option to get the latest commit
-    output = subprocess.check_output(['git', 'log', '-n', '1'])
-    print("\n----------------------------------------------------")
-    # Print the output to the console
-    print(f"{output.decode()}")
+    git_push()
 else:
     print("\tAction Not Supported.")
     exit()
