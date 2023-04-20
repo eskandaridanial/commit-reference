@@ -79,24 +79,87 @@ def git_add():
 
 def git_commit():
     try:
+        # Open the Git repository in the current working directory
+        repo = git.Repo(".")
 
-        # Prompt user for commit message header
-        commit_message = input("Enter commit message: ")
+        # Get a list of files in the staging area
+        staged_files = [item.a_path for item in repo.index.diff('HEAD')]
 
-        # Prompt user for commit smessage body
-        commit_body = input("Enter commit body: ")
+        if len(staged_files) == 0:
+            print("Nothing added to the staging area.")
+            exit()
+        else:
+            print("The following files has been added to the staging area:")
+            for i ,file in enumerate(staged_files):
+                print(colored(f"\t{i+1}. {file}", 'green'))
 
-        # Prompt user for commit metadata
-        commit_metadata = input("Enter commit metadata: ")
+            print("\n-------------------------------------")
+            header_message = ""
+            # Define valid tags and their explanations
+            valid_tags = {
+                "1": {"tag": "feature", "explanation": "a new feature"},
+                "2": {"tag": "fix", "explanation": "bug fix"},
+                "3": {"tag": "refactor", "explanation": "code restructuring"},
+                "4": {"tag": "test", "explanation": "test-related changes"},
+                "5": {"tag": "doc", "explanation": "documentation updates"},
+                "6": {"tag": "style", "explanation": "code formatting"},
+                "7": {"tag": "perf", "explanation": "improve performance"},
+                "8": {"tag": "config", "explanation": "change the configuration file"},
+                "9": {"tag": "security", "explanation": "improve securiy"},
+                "10": {"tag": "revert", "explanation": "undo or revert previous changes"}
+            }
 
-        # Create commit message string in proper format
-        commit_message_str = f"{commit_tag}: {commit_message}"
+            for key, value in valid_tags.items():
+                print(colored(f"\t{key}. {value['tag']}: {value['explanation']}", "green"))
 
-        # Commit changes with tag and message
-        subprocess.run(["git", "commit", "-m", f"{commit_message_str}", "-m", f"{commit_body}", "-m", f"{commit_metadata}"])
+            # Prompt user for input and validate against valid tags
+            while True:
+                commit_tag_num = input("Enter commit tag: ")
+                if commit_tag_num in valid_tags:
+                    commit_tag = valid_tags[commit_tag_num]["tag"]
+                    break
+                else:
+                    print("Invalid tag number. Please try again.")
+            
+            header_message += commit_tag
+            header_message += ": "
+
+            # Prompt user for commit message header
+            while True:
+                commit_message = input("Enter commit message: ")
+                if commit_message:
+                    break
+                else:
+                    print(colored("Commit message cannot be empty. Please try again.", 'red'))
+
+            header_message += commit_message
+
+            # Prompt user for commit smessage body
+            commit_body = input("Enter commit body: ")
+
+            # Prompt user for commit metadata
+            while True:
+                commit_metadata = input("Enter commit metadata: ")
+                if commit_metadata:
+                    break
+                else:
+                    print(colored("Commit metadata cannot be empty. Please try again.", 'red'))
+
+            print("\n\tyour commit message looks like:\n")
+            print(colored(f"\t{header_message}\n\n\t{commit_body}\n\n\t{commit_metadata}", 'white'))
+            confirm = input("\nConfirm? (Y/N): ")
+            while True:
+                if confirm.lower() == "y":
+                    # Commit changes with tag and message
+                    subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_body}\n\n", "-m", f"{commit_metadata}\n\n"])
+                    print(colored("\tChanges has been committed.", 'green'))
+                    break
+                elif confirm.lower() == "n":
+                    print(colored("Run the commit action again.", 'red'))
+                    exit()
 
     except Exception as e:
-        print("An error occurred:", e)
+            print("An error occurred:", e)
 
 # Get the action to take from the command line argument
 if len(sys.argv) > 1:
