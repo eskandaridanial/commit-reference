@@ -8,6 +8,7 @@ import sys
 import subprocess
 import git
 from termcolor import colored
+from art import text2art
 
 def git_add():
     try:
@@ -78,7 +79,7 @@ def git_add():
                     print("\n\tEntered Stage Area",colored(f"\t\t\t {filename}", "green"))
                 break
             else:
-                print(colored("Invalid Selection. Please Try Again.", "red"))
+                print(colored("\tInvalid Selection. Please Try Again.", "red"))
 
     except Exception as e:
         print("An Error Occurred:", e)
@@ -185,6 +186,22 @@ def git_commit():
     except Exception as e:
             print("An error occurred:", e)
 
+def generate_logo(action):
+    logo = text2art(action.upper(), font='rd')
+
+    # Split the string into a list of lines
+    logo_lines = logo.splitlines()
+
+    # Add a tab character to the beginning of each line
+    logo_lines_with_tabs = [f"\t{logo_line}" for logo_line in logo_lines]
+
+    # Join the modified lines back into a single string
+    final_logo = "\n".join(logo_lines_with_tabs)
+
+    print()
+    print(f"{final_logo}")
+    print()
+
 # Get the action to take from the command line argument
 if len(sys.argv) > 1:
     action = sys.argv[1]
@@ -192,14 +209,21 @@ else:
     print("\tPlease Specify Action (e.g. 'add', 'commit', 'push').")
     exit()
 
+
 if action == "add":
+    generate_logo(action)
     git_add()
 elif action == "commit":
+    generate_logo(action)
     git_commit()
 elif action == "push":
+    generate_logo(action)
     os.system(f"git {action}")
     # Run the `git log` command with the `-n 1` option to get the latest commit
     output = subprocess.check_output(['git', 'log', '-n', '1'])
     print("\n----------------------------------------------------")
     # Print the output to the console
     print(f"{output.decode()}")
+else:
+    print("\tAction Not Supported.")
+    exit()
