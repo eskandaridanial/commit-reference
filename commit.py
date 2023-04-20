@@ -169,10 +169,10 @@ def git_commit():
                     # Commit changes with tag and message
                     if commit_body != "":
                         subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_body}\n\n", "-m", f"{commit_metadata}\n\n"])
-                        print("Changes Has Been Committed.", 'green')
+                        print("Changes Has Been Committed.")
                     else:
                         subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_metadata}\n\n"])
-                        print("Changes Has Been Committed.", 'green')
+                        print("Changes Has Been Committed.")
                     break
                 elif confirm.lower() == "n":
                     print(colored("\tRun The Commit Action Again.", 'red'))
