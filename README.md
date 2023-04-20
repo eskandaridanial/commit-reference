@@ -1,86 +1,86 @@
 # Commit Reference
 
-In this document, you will find helpful tips on how to write better commit messages to enhance your collaboration and code management. Clear and effective commit messages are essential for efficient collaboration among team members and for maintaining a clean codebase.
+`In this document, you will find helpful tips on how to write better commit messages to enhance your collaboration and code management. Clear and effective commit messages are essential for efficient collaboration among team members and for maintaining a clean codebase.`
 
 ## Commit Structure
 
-The commit should follow the instruction below:
+`The commit should follow the instruction below:`
 
 ### 1. Tag
 
-The commit should contain a tag that indicates the type of change made.
+`The commit should contain a tag that indicates the type of change made.`
 
-**Types:**
+>**Types:**
 
-**feature:**		  [a new feature]
+>>**feature:**		  [a new feature]
 
-**fix:**	  		  [bug fix]
+>>**fix:**	  		  [bug fix]
 
-**refactor:** 	  [code restructuring]
+>>**refactor:** 	  [code restructuring]
 
-**test:** 		    [test-related changes]
+>>**test:** 		    [test-related changes]
 
-**doc:** 		      [documentation updates]
+>>**doc:** 		      [documentation updates]
 
-**style:** 			  [code formatting]
+>>**style:** 			  [code formatting]
 
-**perf:** 			  [improve performance]
+>>**perf:** 			  [improve performance]
 
-**config:** 		  [change the configuration file]
+>>**config:** 		  [change the configuration file]
 
-**security:** 		[improve securiy]
+>>**security:** 		[improve securiy]
 
-**revert:** 		  [undo or revert previous changes]
+>>**revert:** 		  [undo or revert previous changes]
 	
 **Note** - always use lower-case while using tags.
 
 ### 2. Commit Message
 
-Each commit message should be simple, focused, and contain a single logical 
-change.
+`Each commit message should be simple, focused, and contain a single logical 
+change.`
 
-**Example:**
+>**Example:**
 
-**bad**
+>>**bad**
 
-“updated the login controller, fixed a bug in the registration service, and made some minor styling changes.”
+>>>“updated the login controller, fixed a bug in the registration service, and made some minor styling changes.”
 
-**good**
+>>**good**
 
-“add validation filter to the request message in the login stage.”
+>>>“add validation filter to the request message in the login stage.”
 
 **Note** - the message should start with a verb in the present tense.
 
 ### 3. Body
 
-If the change is complex, add additional information in the commit message 
-body.
+`If the change is complex, add additional information in the commit message 
+body.`
 
-**Example:**
+>**Example:**
 
-**header**
+>>**header**
 
-“add validation to the request message in the login stage”
+>>>“add validation to the request message in the login stage”
 
-**body**
+>>**body**
 
-“Previously, the login stage did not validate the request message, which could result in errors and security vulnerabilities. This commit adds validation to the request message to ensure that it contains all required fields and is in the correct format. With this improvement, we can improve the reliability and security of our login functionality.”
+>>>“Previously, the login stage did not validate the request message, which could result in errors and security vulnerabilities. This commit adds validation to the request message to ensure that it contains all required fields and is in the correct format. With this improvement, we can improve the reliability and security of our login functionality.”
 
 **Note** - for clearer and better understanding, the body should be grammatically correct.
 
 ### 4. Metadata
 
-Include relevant metadata in your commit message such as issue references.
+`Include relevant metadata in your commit message such as issue references.`
 
-**Types:**
+>**Types:**
 
-**related**
+>>**related**
 
-“This commit is related to #666 issue.”
+>>>“This commit is related to #666 issue.”
 
-**fix**
+>>**fix**
 
-“Fix #999 issue.”
+>>>“Fix #999 issue.”
 
 ## Sample
 
@@ -91,6 +91,30 @@ Previously, the login stage did not validate the request message, which could re
 
 Fix #696 issue.
 ```
+
+## How to use the script?
+
+1. Install the dependencies:
+
+`
+pip install GitPython
+pip install termcolor
+`
+
+2. Put it to the global binary files of the OS with the name of your choice. In linux you can do this:
+
+`
+sudo cp /path/to/commit.py /usr/local/bin/
+sudo ln -s /usr/local/bin/commit.py /usr/local/bin/committer
+`
+
+3. Usage
+
+Git add command `committer add`
+
+Git add command `committer commit`
+
+Git add command `committer push`
 
 When writing commit messages, it is important to keep in mind that your teammates are also working on the same codebase. To ensure efficient collaboration, always provide clear and concise descriptions of your changes and their purpose. Avoid using shitty grammar or assuming that others are aware of what the **f** you are doing. By writing informative and easily understandable commit messages, you can facilitate better teamwork and help to maintain a clean and organized codebase.
 
