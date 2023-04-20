@@ -169,10 +169,10 @@ def git_commit():
                     # Commit changes with tag and message
                     if commit_body != "":
                         subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_body}\n\n", "-m", f"{commit_metadata}\n\n"])
-                        print(colored("\tChanges Has Been Committed.", 'green'))
+                        print("Changes Has Been Committed.", 'green')
                     else:
                         subprocess.run(["git", "commit", "-m", f"{header_message}\n\n", "-m", f"{commit_metadata}\n\n"])
-                        print(colored("\tChanges Has Been Committed.", 'green'))
+                        print("Changes Has Been Committed.", 'green')
                     break
                 elif confirm.lower() == "n":
                     print(colored("\tRun The Commit Action Again.", 'red'))
@@ -198,6 +198,6 @@ elif action == "push":
     os.system(f"git {action}")
     # Run the `git log` command with the `-n 1` option to get the latest commit
     output = subprocess.check_output(['git', 'log', '-n', '1'])
-    print("\n\t----------------------------------------------------")
+    print("\n----------------------------------------------------")
     # Print the output to the console
-    print(f"\t{output.decode()}")
+    print(f"{output.decode()}")
